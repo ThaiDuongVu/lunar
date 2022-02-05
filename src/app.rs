@@ -1,4 +1,4 @@
-use pancurses::{endwin, initscr, noecho, set_title, resize_term, Input};
+use pancurses::{curs_set, endwin, flash, initscr, noecho, resize_term, set_title, Input};
 
 // Default values for window initialization
 const DEFAULT_WIDTH: i32 = 100;
@@ -10,6 +10,7 @@ pub struct App {
     width: i32,
     height: i32,
     title: String,
+    do_quit: bool,
 }
 
 impl App {
@@ -19,10 +20,22 @@ impl App {
             width: DEFAULT_WIDTH,
             height: DEFAULT_HEIGHT,
             title: String::from(DEFAULT_TITLE),
+            do_quit: false,
         };
     }
 
-    /// Run current app
+    /// Invert App's color for a split second
+    /// Warning: may cause seizure, please use with caution
+    pub fn flash(&mut self) {
+        flash();
+    }
+
+    /// Quit current App
+    pub fn quit(&mut self) {
+        self.do_quit = true;
+    }
+
+    /// Run current App
     pub fn run<I, U, R, E>(mut self, mut init: I, mut update: U, mut render: R, mut exit: E)
     where
         I: FnMut(&mut App) -> () + 'static,
@@ -32,8 +45,10 @@ impl App {
     {
         let window = initscr();
         window.keypad(true);
-        noecho();
         window.nodelay(true);
+        noecho();
+
+        curs_set(0); // TODO: Make this an option
 
         init(&mut self);
 
@@ -44,12 +59,14 @@ impl App {
             match window.getch() {
                 Some(Input::Character(c)) => {
                     if c == 'q' {
-                        break;
+                        self.quit();
                     }
                 }
-                Some(Input::KeyDC) => break,
                 Some(_input) => {}
                 None => (),
+            }
+            if self.do_quit {
+                break;
             }
             update(&mut self);
 
@@ -57,7 +74,7 @@ impl App {
             render(&mut self);
         }
 
-        endwin();
         exit(&mut self);
+        endwin();
     }
 }

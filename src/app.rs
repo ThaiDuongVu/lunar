@@ -1,15 +1,28 @@
-use pancurses::{curs_set, endwin, flash, initscr, noecho, resize_term, set_title, Input};
+use pancurses::{
+    beep, curs_set, endwin, flash, initscr, noecho, resize_term, set_title, start_color, Input,
+};
+
+/// How to display the console cursor
+pub enum CursorMode {
+    Hidden = 0,
+    Normal = 1,
+    Block = 2,
+}
 
 // Default values for window initialization
 const DEFAULT_WIDTH: i32 = 100;
 const DEFAULT_HEIGHT: i32 = 30;
 const DEFAULT_TITLE: &str = "lunar App";
+const DEFAULT_CURSOR_MODE: CursorMode = CursorMode::Hidden;
 
 /// Main game App, everything is wrapped in here
 pub struct App {
     width: i32,
     height: i32,
     title: String,
+
+    cursor_mode: i32,
+
     do_quit: bool,
 }
 
@@ -20,14 +33,29 @@ impl App {
             width: DEFAULT_WIDTH,
             height: DEFAULT_HEIGHT,
             title: String::from(DEFAULT_TITLE),
+
+            cursor_mode: DEFAULT_CURSOR_MODE as i32,
+
             do_quit: false,
         };
     }
 
+    /// Set current App's cursor display mode
+    pub fn set_cursor(&mut self, mode: CursorMode) {
+        self.cursor_mode = mode as i32;
+        curs_set(self.cursor_mode);
+    }
+
     /// Invert App's color for a split second
     /// Warning: may cause seizure, please use with caution
-    pub fn flash(&mut self) {
+    pub fn flash(&self) {
         flash();
+    }
+
+    /// Play native OS's beep sound
+    /// Warning: can be very annoying, please use with caution
+    pub fn beep(&self) {
+        beep();
     }
 
     /// Quit current App
@@ -47,8 +75,9 @@ impl App {
         window.keypad(true);
         window.nodelay(true);
         noecho();
+        start_color();
 
-        curs_set(0); // TODO: Make this an option
+        self.set_cursor(DEFAULT_CURSOR_MODE);
 
         init(&mut self);
 
@@ -57,8 +86,8 @@ impl App {
 
         loop {
             match window.getch() {
-                Some(Input::Character(c)) => {
-                    if c == 'q' {
+                Some(Input::Character(character)) => {
+                    if character == 'q' {
                         self.quit();
                     }
                 }

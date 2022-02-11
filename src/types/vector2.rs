@@ -203,6 +203,7 @@ impl Vector2 {
     pub fn length(&mut self) -> f32 {
         return (self.x.powi(2) + self.y.powi(2)).sqrt();
     }
+    
     /// Normalize vector so that its length is 1
     pub fn normalized(&mut self) -> Vector2 {
         if self.x == 0.0 && self.y == 0.0 {
@@ -213,14 +214,17 @@ impl Vector2 {
             y: (1.0 / self.length()) * self.y,
         };
     }
+
     /// Return distance from current vector to another vector
     pub fn distance(&mut self, other: Vector2) -> f32 {
         return ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt();
     }
+
     /// Return dot product of current vector and another vector
     pub fn dot(&mut self, other: Vector2) -> f32 {
         return self.x * other.x + self.y * other.y;
     }
+
     /// Translate current vector with another vector
     pub fn translate(&mut self, delta: Vector2) {
         self.x += delta.x;

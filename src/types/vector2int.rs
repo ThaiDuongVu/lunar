@@ -1,3 +1,4 @@
+use crate::types::vector2::Vector2;
 use std::fmt;
 use std::ops;
 
@@ -200,27 +201,32 @@ impl Vector2Int {
     }
 
     /// Return length of current vector
-    pub fn length(&mut self) -> i32 {
-        return (self.x.powi(2) + self.y.powi(2)).sqrt();
+    pub fn length(&mut self) -> f32 {
+        return ((self.x.pow(2) + self.y.pow(2)) as f32).sqrt();
     }
+
     /// Normalize vector so that its length is 1
-    pub fn normalized(&mut self) -> Vector2Int {
+    /// Note: Return type is Vector2
+    pub fn normalized(&mut self) -> Vector2 {
         if self.x == 0 && self.y == 0 {
-            return Vector2Int::zero();
+            return Vector2::zero();
         }
-        return Vector2Int {
-            x: (1 / self.length()) * self.x,
-            y: (1 / self.length()) * self.y,
+        return Vector2 {
+            x: (1 as f32 / self.length()) * (self.x as f32),
+            y: (1 as f32 / self.length()) * (self.y as f32),
         };
     }
+
     /// Return distance from current vector to another vector
-    pub fn distance(&mut self, other: Vector2Int) -> i32 {
-        return ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt();
+    pub fn distance(&mut self, other: Vector2Int) -> f32 {
+        return (((self.x - other.x).pow(2) + (self.y - other.y).pow(2)) as f32).sqrt();
     }
+
     /// Return dot product of current vector and another vector
     pub fn dot(&mut self, other: Vector2Int) -> i32 {
         return self.x * other.x + self.y * other.y;
     }
+    
     /// Translate current vector with another vector
     pub fn translate(&mut self, delta: Vector2Int) {
         self.x += delta.x;

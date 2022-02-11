@@ -1,3 +1,4 @@
+use crate::types::vector2int::Vector2Int;
 use pancurses::{
     beep, curs_set, endwin, flash, initscr, noecho, resize_term, set_title, start_color, Input,
 };
@@ -37,6 +38,33 @@ impl App {
             cursor_mode: DEFAULT_CURSOR_MODE as i32,
 
             do_quit: false,
+        };
+    }
+
+    /// Set App console width
+    pub fn set_width(&mut self, width: i32) {
+        self.width = width;
+        resize_term(self.height, self.width);
+    }
+
+    /// Set App console height
+    pub fn set_height(&mut self, height: i32) {
+        self.height = height;
+        resize_term(self.height, self.width);
+    }
+
+    /// Set App console width and height
+    pub fn set_size(&mut self, size: Vector2Int) {
+        self.width = size.x;
+        self.height = size.y;
+        resize_term(self.height, self.width);
+    }
+
+    /// Return current App's console size as a Vector2Int
+    pub fn size(&self) -> Vector2Int {
+        return Vector2Int {
+            x: self.width,
+            y: self.height,
         };
     }
 

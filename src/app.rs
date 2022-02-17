@@ -41,31 +41,36 @@ impl App {
         };
     }
 
-    /// Set App console width
+    /// Set App console window width
     pub fn set_width(&mut self, width: i32) {
         self.width = width;
         resize_term(self.height, self.width);
     }
 
-    /// Set App console height
+    /// Set App console window height
     pub fn set_height(&mut self, height: i32) {
         self.height = height;
         resize_term(self.height, self.width);
     }
 
-    /// Set App console width and height
+    /// Set App console window width and height
     pub fn set_size(&mut self, size: Vector2Int) {
         self.width = size.x;
         self.height = size.y;
         resize_term(self.height, self.width);
     }
 
-    /// Return current App's console size as a Vector2Int
+    /// Return current App's console window size as a Vector2Int
     pub fn size(&self) -> Vector2Int {
         return Vector2Int {
             x: self.width,
             y: self.height,
         };
+    }
+
+    /// Set App console window title
+    pub fn set_title(&mut self, title: String) {
+        set_title(&title);
     }
 
     /// Set current App's cursor display mode
@@ -105,12 +110,11 @@ impl App {
         noecho();
         start_color();
 
-        self.set_cursor(DEFAULT_CURSOR_MODE);
+        curs_set(self.cursor_mode as i32); // Set default cursor mode
+        set_title(&self.title); // Set default window title
+        resize_term(self.height, self.width); // Set default window size
 
         init(&mut self);
-
-        set_title(&self.title);
-        resize_term(self.height, self.width);
 
         loop {
             match window.getch() {

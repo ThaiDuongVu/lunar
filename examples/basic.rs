@@ -5,9 +5,7 @@ fn main() {
     let app = App::new();
 
     // Initialize App
-    let init = move |app: &mut App| {
-        app.set_cursor(lunar::app::CursorMode::Block);
-    };
+    let init = move |_app: &mut App| {};
 
     // Update App
     let update = move |_app: &mut App| {};

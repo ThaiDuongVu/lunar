@@ -3,6 +3,7 @@ use pancurses::{
     beep, curs_set, endwin, flash, initscr, noecho, resize_term, set_title, start_color, Input,
 };
 
+#[derive(Clone, Copy)]
 /// How to display the console cursor
 pub enum CursorMode {
     Hidden = 0,
@@ -22,7 +23,7 @@ pub struct App {
     height: i32,
     title: String,
 
-    cursor_mode: i32,
+    cursor_mode: CursorMode,
 
     do_quit: bool,
 }
@@ -35,7 +36,7 @@ impl App {
             height: DEFAULT_HEIGHT,
             title: String::from(DEFAULT_TITLE),
 
-            cursor_mode: DEFAULT_CURSOR_MODE as i32,
+            cursor_mode: DEFAULT_CURSOR_MODE,
 
             do_quit: false,
         };
@@ -47,10 +48,20 @@ impl App {
         resize_term(self.height, self.width);
     }
 
+    /// Get App console window width
+    pub fn width(&self) -> i32 {
+        return self.width;
+    }
+
     /// Set App console window height
     pub fn set_height(&mut self, height: i32) {
         self.height = height;
         resize_term(self.height, self.width);
+    }
+
+    /// Get App console height
+    pub fn height(&self) -> i32 {
+        return self.height;
     }
 
     /// Set App console window width and height
@@ -73,10 +84,20 @@ impl App {
         set_title(&title);
     }
 
+    /// Get App console window title
+    pub fn title(&self) -> &str {
+        return &self.title;
+    }
+
     /// Set current App's cursor display mode
     pub fn set_cursor(&mut self, mode: CursorMode) {
-        self.cursor_mode = mode as i32;
-        curs_set(self.cursor_mode);
+        self.cursor_mode = mode;
+        curs_set(self.cursor_mode as i32);
+    }
+
+    /// Get current App's cursor display mode
+    pub fn cursor_mode(&self) -> CursorMode {
+        return self.cursor_mode;
     }
 
     /// Invert App's color for a split second

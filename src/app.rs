@@ -16,6 +16,9 @@ const DEFAULT_WIDTH: i32 = 100;
 const DEFAULT_HEIGHT: i32 = 30;
 const DEFAULT_TITLE: &str = "lunar App";
 const DEFAULT_CURSOR_MODE: CursorMode = CursorMode::Hidden;
+const DEFAULT_BACKGROUND: u64 = 0;
+const DEFAULT_BORDER: u64 = 128;
+const DEFAULT_CORNER: u64 = 128;
 
 /// Main game App, everything is wrapped in here
 pub struct App {
@@ -23,9 +26,20 @@ pub struct App {
     height: i32,
     title: String,
     cursor_mode: CursorMode,
-    background: Option<char>,
     do_quit: bool,
     window: Option<pancurses::Window>,
+
+    background: u64,
+
+    border_left: u64,
+    border_right: u64,
+    border_top: u64,
+    border_bottom: u64,
+
+    corner_top_left: u64,
+    corner_top_right: u64,
+    corner_bottom_left: u64,
+    corner_bottom_right: u64,
 }
 
 impl App {
@@ -36,9 +50,20 @@ impl App {
             height: DEFAULT_HEIGHT,
             title: String::from(DEFAULT_TITLE),
             cursor_mode: DEFAULT_CURSOR_MODE,
-            background: None,
             do_quit: false,
             window: None,
+
+            background: DEFAULT_BACKGROUND,
+
+            border_left: DEFAULT_BORDER,
+            border_right: DEFAULT_BORDER,
+            border_top: DEFAULT_BORDER,
+            border_bottom: DEFAULT_BORDER,
+
+            corner_top_left: DEFAULT_CORNER,
+            corner_top_right: DEFAULT_CORNER,
+            corner_bottom_left: DEFAULT_CORNER,
+            corner_bottom_right: DEFAULT_CORNER,
         };
     }
 
@@ -102,21 +127,100 @@ impl App {
 
     /// Set current App's background character
     pub fn set_background(&mut self, background_char: char) {
-        self.background = Some(background_char);
-        self.window.as_ref().unwrap().bkgdset(background_char);
+        self.background = background_char as u64;
+        self.window.as_ref().unwrap().bkgdset(self.background);
         self.window.as_ref().unwrap().clear();
     }
 
     /// Set current App's background to empty
     pub fn clear_background(&mut self) {
-        self.background = None;
-        self.window.as_ref().unwrap().bkgdset(0 as u64);
+        self.background = DEFAULT_BACKGROUND;
+        self.window.as_ref().unwrap().bkgdset(self.background);
         self.window.as_ref().unwrap().clear();
     }
 
     /// Get current App's background character if there is a background set
-    pub fn get_background(&self) -> Option<char> {
-        return self.background;
+    pub fn get_background(&self) -> char {
+        return self.background as u8 as char;
+    }
+
+    /// Set current App's left side border
+    pub fn set_border_left(&mut self, border_char: char) {
+        self.border_left = border_char as u64;
+        self.window.as_ref().unwrap().border(
+            self.border_left,
+            self.border_right,
+            self.border_top,
+            self.border_bottom,
+            self.corner_top_left,
+            self.corner_top_right,
+            self.corner_bottom_left,
+            self.corner_bottom_right,
+        );
+    }
+
+    /// Set current App's right side border
+    pub fn set_border_right(&mut self, border_char: char) {
+        self.border_right = border_char as u64;
+        self.window.as_ref().unwrap().border(
+            self.border_left,
+            self.border_right,
+            self.border_top,
+            self.border_bottom,
+            self.corner_top_left,
+            self.corner_top_right,
+            self.corner_bottom_left,
+            self.corner_bottom_right,
+        );
+    }
+
+    /// Set current App's top side border
+    pub fn set_border_top(&mut self, border_char: char) {
+        self.border_top = border_char as u64;
+        self.window.as_ref().unwrap().border(
+            self.border_left,
+            self.border_right,
+            self.border_top,
+            self.border_bottom,
+            self.corner_top_left,
+            self.corner_top_right,
+            self.corner_bottom_left,
+            self.corner_bottom_right,
+        );
+    }
+
+    /// Set current App's bottom side border
+    pub fn set_border_bottom(&mut self, border_char: char) {
+        self.border_bottom = border_char as u64;
+        self.window.as_ref().unwrap().border(
+            self.border_left,
+            self.border_right,
+            self.border_top,
+            self.border_bottom,
+            self.corner_top_left,
+            self.corner_top_right,
+            self.corner_bottom_left,
+            self.corner_bottom_right,
+        );
+    }
+
+    /// Set all App's border back to default
+    pub fn clear_border(&mut self) {
+        self.border_left = DEFAULT_BORDER;
+        self.border_right = DEFAULT_BORDER;
+        self.border_top = DEFAULT_BORDER;
+        self.border_bottom = DEFAULT_BORDER;
+
+        self.window.as_ref().unwrap().border(
+            self.border_left,
+            self.border_right,
+            self.border_top,
+            self.border_bottom,
+            self.corner_top_left,
+            self.corner_top_right,
+            self.corner_bottom_left,
+            self.corner_bottom_right,
+        );
     }
 
     /// Invert App's color for a split second
@@ -153,6 +257,7 @@ impl App {
         curs_set(self.cursor_mode as i32); // Set default cursor mode
         set_title(&self.title); // Set default window title
         resize_term(self.height, self.width); // Set default window size
+        self.clear_background(); // Set default background
 
         init(&mut self);
 
@@ -161,10 +266,6 @@ impl App {
                 Some(pancurses::Input::Character(character)) => {
                     if character == 'q' {
                         self.quit();
-                    } else if character == 'b' {
-                        self.set_background('b');
-                    } else if character == 'c' {
-                        self.clear_background();
                     }
                 }
                 Some(pancurses::Input::KeyEnter) => {

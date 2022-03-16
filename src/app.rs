@@ -1,6 +1,6 @@
 use crate::types::vector2int::Vector2Int;
 use pancurses::{
-    beep, curs_set, endwin, flash, initscr, noecho, resize_term, set_title, start_color, Input,
+    beep, curs_set, endwin, flash, initscr, noecho, resize_term, set_title, start_color,
 };
 
 #[derive(Clone, Copy)]
@@ -22,10 +22,10 @@ pub struct App {
     width: i32,
     height: i32,
     title: String,
-
     cursor_mode: CursorMode,
-
+    background: Option<char>,
     do_quit: bool,
+    window: Option<pancurses::Window>,
 }
 
 impl App {
@@ -35,10 +35,10 @@ impl App {
             width: DEFAULT_WIDTH,
             height: DEFAULT_HEIGHT,
             title: String::from(DEFAULT_TITLE),
-
             cursor_mode: DEFAULT_CURSOR_MODE,
-
+            background: None,
             do_quit: false,
+            window: None,
         };
     }
 
@@ -100,6 +100,25 @@ impl App {
         return self.cursor_mode;
     }
 
+    /// Set current App's background character
+    pub fn set_background(&mut self, background_char: char) {
+        self.background = Some(background_char);
+        self.window.as_ref().unwrap().bkgdset(background_char);
+        self.window.as_ref().unwrap().clear();
+    }
+
+    /// Set current App's background to empty
+    pub fn clear_background(&mut self) {
+        self.background = None;
+        self.window.as_ref().unwrap().bkgdset(0 as u64);
+        self.window.as_ref().unwrap().clear();
+    }
+
+    /// Get current App's background character if there is a background set
+    pub fn get_background(&self) -> Option<char> {
+        return self.background;
+    }
+
     /// Invert App's color for a split second
     /// Warning: may cause seizure, please use with caution
     pub fn flash(&self) {
@@ -125,9 +144,9 @@ impl App {
         R: FnMut(&mut App) -> () + 'static,
         E: FnMut(&mut App) -> () + 'static,
     {
-        let window = initscr();
-        window.keypad(true);
-        window.nodelay(true);
+        self.window = Some(initscr());
+        self.window.as_ref().unwrap().keypad(true);
+        self.window.as_ref().unwrap().nodelay(true);
         noecho();
         start_color();
 
@@ -138,21 +157,31 @@ impl App {
         init(&mut self);
 
         loop {
-            match window.getch() {
-                Some(Input::Character(character)) => {
+            match self.window.as_ref().unwrap().getch() {
+                Some(pancurses::Input::Character(character)) => {
                     if character == 'q' {
                         self.quit();
+                    } else if character == 'b' {
+                        self.set_background('b');
+                    } else if character == 'c' {
+                        self.clear_background();
                     }
+                }
+                Some(pancurses::Input::KeyEnter) => {
+                    println!("interesting");
                 }
                 Some(_input) => {}
                 None => (),
             }
+
             if self.do_quit {
                 break;
             }
             update(&mut self);
 
-            window.clear();
+            // Update renders
+            self.window.as_ref().unwrap().refresh();
+            // window.border(test, 'b', 'c', 'd', 'e', 'f', 'g', 'h'); // TODO: Extract this to a user function
             render(&mut self);
         }
 

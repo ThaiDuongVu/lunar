@@ -144,9 +144,7 @@ impl App {
         return self.background as u8 as char;
     }
 
-    /// Set current App's left side border
-    pub fn set_border_left(&mut self, border_char: char) {
-        self.border_left = border_char as u64;
+    fn update_borders(&mut self) {
         self.window.as_ref().unwrap().border(
             self.border_left,
             self.border_right,
@@ -157,70 +155,63 @@ impl App {
             self.corner_bottom_left,
             self.corner_bottom_right,
         );
+    }
+
+    /// Set current App's left side border
+    pub fn set_border_left(&mut self, border_char: char) {
+        self.border_left = border_char as u64;
+        self.update_borders();
     }
 
     /// Set current App's right side border
     pub fn set_border_right(&mut self, border_char: char) {
         self.border_right = border_char as u64;
-        self.window.as_ref().unwrap().border(
-            self.border_left,
-            self.border_right,
-            self.border_top,
-            self.border_bottom,
-            self.corner_top_left,
-            self.corner_top_right,
-            self.corner_bottom_left,
-            self.corner_bottom_right,
-        );
+        self.update_borders();
     }
 
     /// Set current App's top side border
     pub fn set_border_top(&mut self, border_char: char) {
         self.border_top = border_char as u64;
-        self.window.as_ref().unwrap().border(
-            self.border_left,
-            self.border_right,
-            self.border_top,
-            self.border_bottom,
-            self.corner_top_left,
-            self.corner_top_right,
-            self.corner_bottom_left,
-            self.corner_bottom_right,
-        );
+        self.update_borders();
     }
 
     /// Set current App's bottom side border
     pub fn set_border_bottom(&mut self, border_char: char) {
         self.border_bottom = border_char as u64;
-        self.window.as_ref().unwrap().border(
-            self.border_left,
-            self.border_right,
-            self.border_top,
-            self.border_bottom,
-            self.corner_top_left,
-            self.corner_top_right,
-            self.corner_bottom_left,
-            self.corner_bottom_right,
-        );
+        self.update_borders();
     }
 
-    /// Set all App's border back to default
-    pub fn clear_border(&mut self) {
+    /// Clear current App's left border
+    pub fn clear_border_left(&mut self) {
+        self.border_left = DEFAULT_BORDER;
+        self.update_borders();
+    }
+
+    /// Clear current App's right border
+    pub fn clear_border_right(&mut self) {
+        self.border_right = DEFAULT_BORDER;
+        self.update_borders();
+    }
+
+    /// Clear current App's top border
+    pub fn clear_border_top(&mut self) {
+        self.border_top = DEFAULT_BORDER;
+        self.update_borders();
+    }
+
+    /// Clear current App's bottom border
+    pub fn clear_border_bottom(&mut self) {
+        self.border_bottom = DEFAULT_BORDER;
+        self.update_borders();
+    }
+
+    /// Clear all App borders
+    pub fn clear_all_borders(&mut self) {
         self.border_left = DEFAULT_BORDER;
         self.border_right = DEFAULT_BORDER;
         self.border_top = DEFAULT_BORDER;
         self.border_bottom = DEFAULT_BORDER;
-
-        self.window.as_ref().unwrap().border(
-            self.border_left,
-            self.border_right,
-            self.border_top,
-            self.border_bottom,
-            self.corner_top_left,
-            self.corner_top_right,
-            self.corner_bottom_left,
-            self.corner_bottom_right,
-        );
+        self.update_borders();
     }
 
     /// Invert App's color for a split second

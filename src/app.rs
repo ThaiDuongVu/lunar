@@ -144,7 +144,8 @@ impl App {
         return self.background as u8 as char;
     }
 
-    fn update_borders(&mut self) {
+    /// Update all App's borders and corners based on current border values
+    fn update_borders_corners(&mut self) {
         self.window.as_ref().unwrap().border(
             self.border_left,
             self.border_right,
@@ -160,49 +161,49 @@ impl App {
     /// Set current App's left side border
     pub fn set_border_left(&mut self, border_char: char) {
         self.border_left = border_char as u64;
-        self.update_borders();
+        self.update_borders_corners();
     }
 
     /// Set current App's right side border
     pub fn set_border_right(&mut self, border_char: char) {
         self.border_right = border_char as u64;
-        self.update_borders();
+        self.update_borders_corners();
     }
 
     /// Set current App's top side border
     pub fn set_border_top(&mut self, border_char: char) {
         self.border_top = border_char as u64;
-        self.update_borders();
+        self.update_borders_corners();
     }
 
     /// Set current App's bottom side border
     pub fn set_border_bottom(&mut self, border_char: char) {
         self.border_bottom = border_char as u64;
-        self.update_borders();
+        self.update_borders_corners();
     }
 
     /// Clear current App's left border
     pub fn clear_border_left(&mut self) {
         self.border_left = DEFAULT_BORDER;
-        self.update_borders();
+        self.update_borders_corners();
     }
 
     /// Clear current App's right border
     pub fn clear_border_right(&mut self) {
         self.border_right = DEFAULT_BORDER;
-        self.update_borders();
+        self.update_borders_corners();
     }
 
     /// Clear current App's top border
     pub fn clear_border_top(&mut self) {
         self.border_top = DEFAULT_BORDER;
-        self.update_borders();
+        self.update_borders_corners();
     }
 
     /// Clear current App's bottom border
     pub fn clear_border_bottom(&mut self) {
         self.border_bottom = DEFAULT_BORDER;
-        self.update_borders();
+        self.update_borders_corners();
     }
 
     /// Clear all App borders
@@ -211,7 +212,64 @@ impl App {
         self.border_right = DEFAULT_BORDER;
         self.border_top = DEFAULT_BORDER;
         self.border_bottom = DEFAULT_BORDER;
-        self.update_borders();
+        self.update_borders_corners();
+    }
+
+    /// Set current App's top left corner
+    pub fn set_corner_top_left(&mut self, corner_char: char) {
+        self.corner_top_left = corner_char as u64;
+        self.update_borders_corners();
+    }
+
+    /// Set current App's top right corner
+    pub fn set_corner_top_right(&mut self, corner_char: char) {
+        self.corner_top_right = corner_char as u64;
+        self.update_borders_corners();
+    }
+
+    /// Set current App's bottom left corner
+    pub fn set_corner_bottom_left(&mut self, corner_char: char) {
+        self.corner_bottom_left = corner_char as u64;
+        self.update_borders_corners();
+    }
+
+    /// Set current App's bottom right corner
+    pub fn set_corner_bottom_right(&mut self, corner_char: char) {
+        self.corner_bottom_right = corner_char as u64;
+        self.update_borders_corners();
+    }
+
+    /// Clear current App's top left corner
+    pub fn clear_corner_top_left(&mut self) {
+        self.corner_top_left = DEFAULT_CORNER;
+        self.update_borders_corners();
+    }
+
+    /// Clear current App's top right corner
+    pub fn clear_corner_top_right(&mut self) {
+        self.corner_top_right = DEFAULT_CORNER;
+        self.update_borders_corners();
+    }
+
+    /// Clear current App's bottom left corner
+    pub fn clear_corner_bottom_left(&mut self) {
+        self.corner_bottom_left = DEFAULT_CORNER;
+        self.update_borders_corners();
+    }
+
+    /// Clear current App's bottom right corner
+    pub fn clear_corner_bottom_right(&mut self) {
+        self.corner_bottom_right = DEFAULT_CORNER;
+        self.update_borders_corners();
+    }
+
+    /// Clear all App corners
+    pub fn clear_all_corners(&mut self) {
+        self.corner_top_left = DEFAULT_CORNER;
+        self.corner_top_right = DEFAULT_CORNER;
+        self.corner_bottom_left = DEFAULT_CORNER;
+        self.corner_bottom_right = DEFAULT_CORNER;
+        self.update_borders_corners();
     }
 
     /// Invert App's color for a split second

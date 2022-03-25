@@ -182,6 +182,15 @@ impl App {
         self.update_borders_corners();
     }
 
+    /// Set all current App's borders
+    pub fn set_all_borders(&mut self, border_char: char) {
+        self.border_top = border_char as u64;
+        self.border_bottom = border_char as u64;
+        self.border_left = border_char as u64;
+        self.border_right = border_char as u64;
+        self.update_borders_corners();
+    }
+
     /// Clear current App's left border
     pub fn clear_border_left(&mut self) {
         self.border_left = DEFAULT_BORDER;
@@ -235,6 +244,15 @@ impl App {
 
     /// Set current App's bottom right corner
     pub fn set_corner_bottom_right(&mut self, corner_char: char) {
+        self.corner_bottom_right = corner_char as u64;
+        self.update_borders_corners();
+    }
+
+    /// Set all current App's corners
+    pub fn set_all_corners(&mut self, corner_char: char) {
+        self.corner_top_left = corner_char as u64;
+        self.corner_top_right = corner_char as u64;
+        self.corner_bottom_left = corner_char as u64;
         self.corner_bottom_right = corner_char as u64;
         self.update_borders_corners();
     }
@@ -331,7 +349,6 @@ impl App {
 
             // Update renders
             self.window.as_ref().unwrap().refresh();
-            // window.border(test, 'b', 'c', 'd', 'e', 'f', 'g', 'h'); // TODO: Extract this to a user function
             render(&mut self);
         }
 

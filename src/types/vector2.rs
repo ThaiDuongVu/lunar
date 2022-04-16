@@ -21,7 +21,7 @@ impl Clone for Vector2 {
     }
 }
 
-// Mathematical operator overloadings for Vector type on Vector type
+// Mathematical operator overloading for Vector type on Vector type
 impl ops::Add<Vector2> for Vector2 {
     type Output = Vector2;
     fn add(self, rhs: Vector2) -> Vector2 {
@@ -31,6 +31,7 @@ impl ops::Add<Vector2> for Vector2 {
         };
     }
 }
+
 impl ops::Sub<Vector2> for Vector2 {
     type Output = Vector2;
     fn sub(self, rhs: Vector2) -> Vector2 {
@@ -40,6 +41,7 @@ impl ops::Sub<Vector2> for Vector2 {
         };
     }
 }
+
 impl ops::Mul<Vector2> for Vector2 {
     type Output = Vector2;
     fn mul(self, rhs: Vector2) -> Vector2 {
@@ -49,6 +51,7 @@ impl ops::Mul<Vector2> for Vector2 {
         };
     }
 }
+
 impl ops::Div<Vector2> for Vector2 {
     type Output = Vector2;
     fn div(self, rhs: Vector2) -> Vector2 {
@@ -58,6 +61,7 @@ impl ops::Div<Vector2> for Vector2 {
         };
     }
 }
+
 impl ops::AddAssign for Vector2 {
     fn add_assign(&mut self, rhs: Vector2) {
         *self = Vector2 {
@@ -66,6 +70,7 @@ impl ops::AddAssign for Vector2 {
         }
     }
 }
+
 impl ops::SubAssign for Vector2 {
     fn sub_assign(&mut self, rhs: Vector2) {
         *self = Vector2 {
@@ -74,6 +79,7 @@ impl ops::SubAssign for Vector2 {
         }
     }
 }
+
 impl ops::MulAssign for Vector2 {
     fn mul_assign(&mut self, rhs: Vector2) {
         *self = Vector2 {
@@ -82,6 +88,7 @@ impl ops::MulAssign for Vector2 {
         }
     }
 }
+
 impl ops::DivAssign for Vector2 {
     fn div_assign(&mut self, rhs: Vector2) {
         *self = Vector2 {
@@ -90,6 +97,7 @@ impl ops::DivAssign for Vector2 {
         }
     }
 }
+
 impl ops::Neg for Vector2 {
     type Output = Vector2;
     fn neg(self) -> Vector2 {
@@ -100,7 +108,7 @@ impl ops::Neg for Vector2 {
     }
 }
 
-// Mathematical operator overloadings for Vector type on f32 type
+// Mathematical operator overloading for Vector type on f32 type
 impl ops::Add<f32> for Vector2 {
     type Output = Vector2;
     fn add(self, rhs: f32) -> Vector2 {
@@ -110,6 +118,7 @@ impl ops::Add<f32> for Vector2 {
         };
     }
 }
+
 impl ops::Sub<f32> for Vector2 {
     type Output = Vector2;
     fn sub(self, rhs: f32) -> Vector2 {
@@ -119,6 +128,7 @@ impl ops::Sub<f32> for Vector2 {
         };
     }
 }
+
 impl ops::Mul<f32> for Vector2 {
     type Output = Vector2;
     fn mul(self, rhs: f32) -> Vector2 {
@@ -128,6 +138,7 @@ impl ops::Mul<f32> for Vector2 {
         };
     }
 }
+
 impl ops::Div<f32> for Vector2 {
     type Output = Vector2;
     fn div(self, rhs: f32) -> Vector2 {
@@ -137,6 +148,7 @@ impl ops::Div<f32> for Vector2 {
         };
     }
 }
+
 impl ops::AddAssign<f32> for Vector2 {
     fn add_assign(&mut self, rhs: f32) {
         *self = Vector2 {
@@ -145,6 +157,7 @@ impl ops::AddAssign<f32> for Vector2 {
         }
     }
 }
+
 impl ops::SubAssign<f32> for Vector2 {
     fn sub_assign(&mut self, rhs: f32) {
         *self = Vector2 {
@@ -154,7 +167,7 @@ impl ops::SubAssign<f32> for Vector2 {
     }
 }
 
-// Logical operator overloadings for type Vector
+// Logical operator overloading for type Vector
 impl PartialEq for Vector2 {
     fn eq(&self, other: &Vector2) -> bool {
         return self.x == other.x && self.y == other.y;
@@ -203,7 +216,7 @@ impl Vector2 {
     pub fn length(&mut self) -> f32 {
         return (self.x.powi(2) + self.y.powi(2)).sqrt();
     }
-    
+
     /// Normalize vector so that its length is 1
     pub fn normalized(&mut self) -> Vector2 {
         if self.x == 0.0 && self.y == 0.0 {

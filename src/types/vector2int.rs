@@ -22,7 +22,7 @@ impl Clone for Vector2Int {
     }
 }
 
-// Mathematical operator overloadings for Vector type on Vector type
+// Mathematical operator overloading for Vector type on Vector type
 impl ops::Add<Vector2Int> for Vector2Int {
     type Output = Vector2Int;
     fn add(self, rhs: Vector2Int) -> Vector2Int {
@@ -32,6 +32,7 @@ impl ops::Add<Vector2Int> for Vector2Int {
         };
     }
 }
+
 impl ops::Sub<Vector2Int> for Vector2Int {
     type Output = Vector2Int;
     fn sub(self, rhs: Vector2Int) -> Vector2Int {
@@ -41,6 +42,7 @@ impl ops::Sub<Vector2Int> for Vector2Int {
         };
     }
 }
+
 impl ops::Mul<Vector2Int> for Vector2Int {
     type Output = Vector2Int;
     fn mul(self, rhs: Vector2Int) -> Vector2Int {
@@ -50,6 +52,7 @@ impl ops::Mul<Vector2Int> for Vector2Int {
         };
     }
 }
+
 impl ops::Div<Vector2Int> for Vector2Int {
     type Output = Vector2Int;
     fn div(self, rhs: Vector2Int) -> Vector2Int {
@@ -59,6 +62,7 @@ impl ops::Div<Vector2Int> for Vector2Int {
         };
     }
 }
+
 impl ops::AddAssign for Vector2Int {
     fn add_assign(&mut self, rhs: Vector2Int) {
         *self = Vector2Int {
@@ -67,6 +71,7 @@ impl ops::AddAssign for Vector2Int {
         }
     }
 }
+
 impl ops::SubAssign for Vector2Int {
     fn sub_assign(&mut self, rhs: Vector2Int) {
         *self = Vector2Int {
@@ -75,6 +80,7 @@ impl ops::SubAssign for Vector2Int {
         }
     }
 }
+
 impl ops::MulAssign for Vector2Int {
     fn mul_assign(&mut self, rhs: Vector2Int) {
         *self = Vector2Int {
@@ -83,6 +89,7 @@ impl ops::MulAssign for Vector2Int {
         }
     }
 }
+
 impl ops::DivAssign for Vector2Int {
     fn div_assign(&mut self, rhs: Vector2Int) {
         *self = Vector2Int {
@@ -91,6 +98,7 @@ impl ops::DivAssign for Vector2Int {
         }
     }
 }
+
 impl ops::Neg for Vector2Int {
     type Output = Vector2Int;
     fn neg(self) -> Vector2Int {
@@ -101,7 +109,7 @@ impl ops::Neg for Vector2Int {
     }
 }
 
-// Mathematical operator overloadings for Vector type on i32 type
+// Mathematical operator overloading for Vector type on i32 type
 impl ops::Add<i32> for Vector2Int {
     type Output = Vector2Int;
     fn add(self, rhs: i32) -> Vector2Int {
@@ -111,6 +119,7 @@ impl ops::Add<i32> for Vector2Int {
         };
     }
 }
+
 impl ops::Sub<i32> for Vector2Int {
     type Output = Vector2Int;
     fn sub(self, rhs: i32) -> Vector2Int {
@@ -120,6 +129,7 @@ impl ops::Sub<i32> for Vector2Int {
         };
     }
 }
+
 impl ops::Mul<i32> for Vector2Int {
     type Output = Vector2Int;
     fn mul(self, rhs: i32) -> Vector2Int {
@@ -129,6 +139,7 @@ impl ops::Mul<i32> for Vector2Int {
         };
     }
 }
+
 impl ops::Div<i32> for Vector2Int {
     type Output = Vector2Int;
     fn div(self, rhs: i32) -> Vector2Int {
@@ -138,6 +149,7 @@ impl ops::Div<i32> for Vector2Int {
         };
     }
 }
+
 impl ops::AddAssign<i32> for Vector2Int {
     fn add_assign(&mut self, rhs: i32) {
         *self = Vector2Int {
@@ -146,6 +158,7 @@ impl ops::AddAssign<i32> for Vector2Int {
         }
     }
 }
+
 impl ops::SubAssign<i32> for Vector2Int {
     fn sub_assign(&mut self, rhs: i32) {
         *self = Vector2Int {
@@ -155,7 +168,7 @@ impl ops::SubAssign<i32> for Vector2Int {
     }
 }
 
-// Logical operator overloadings for type Vector
+// Logical operator overloading for type Vector
 impl PartialEq for Vector2Int {
     fn eq(&self, other: &Vector2Int) -> bool {
         return self.x == other.x && self.y == other.y;
@@ -226,7 +239,7 @@ impl Vector2Int {
     pub fn dot(&mut self, other: Vector2Int) -> i32 {
         return self.x * other.x + self.y * other.y;
     }
-    
+
     /// Translate current vector with another vector
     pub fn translate(&mut self, delta: Vector2Int) {
         self.x += delta.x;

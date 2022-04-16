@@ -28,7 +28,7 @@ impl Clone for Color32 {
     }
 }
 
-// Mathematical operator overloadings for Color32 type on Color32 type
+// Mathematical operator overloading for Color32 type on Color32 type
 impl ops::Add<Color32> for Color32 {
     type Output = Color32;
     fn add(self, rhs: Color32) -> Color32 {
@@ -40,6 +40,7 @@ impl ops::Add<Color32> for Color32 {
         };
     }
 }
+
 impl ops::Sub<Color32> for Color32 {
     type Output = Color32;
     fn sub(self, rhs: Color32) -> Color32 {
@@ -51,6 +52,7 @@ impl ops::Sub<Color32> for Color32 {
         };
     }
 }
+
 impl ops::Mul<Color32> for Color32 {
     type Output = Color32;
     fn mul(self, rhs: Color32) -> Color32 {
@@ -62,6 +64,7 @@ impl ops::Mul<Color32> for Color32 {
         };
     }
 }
+
 impl ops::Div<Color32> for Color32 {
     type Output = Color32;
     fn div(self, rhs: Color32) -> Color32 {
@@ -74,7 +77,7 @@ impl ops::Div<Color32> for Color32 {
     }
 }
 
-// Mathematical operator overloadings for Color32 type on u32 type
+// Mathematical operator overloading for Color32 type on u32 type
 impl ops::Add<u32> for Color32 {
     type Output = Color32;
     fn add(self, rhs: u32) -> Color32 {
@@ -86,6 +89,7 @@ impl ops::Add<u32> for Color32 {
         };
     }
 }
+
 impl ops::Sub<u32> for Color32 {
     type Output = Color32;
     fn sub(self, rhs: u32) -> Color32 {
@@ -97,6 +101,7 @@ impl ops::Sub<u32> for Color32 {
         };
     }
 }
+
 impl ops::Mul<u32> for Color32 {
     type Output = Color32;
     fn mul(self, rhs: u32) -> Color32 {
@@ -108,6 +113,7 @@ impl ops::Mul<u32> for Color32 {
         };
     }
 }
+
 impl ops::Div<u32> for Color32 {
     type Output = Color32;
     fn div(self, rhs: u32) -> Color32 {
@@ -119,6 +125,7 @@ impl ops::Div<u32> for Color32 {
         };
     }
 }
+
 impl ops::AddAssign for Color32 {
     fn add_assign(&mut self, rhs: Color32) {
         *self = Color32 {
@@ -129,6 +136,7 @@ impl ops::AddAssign for Color32 {
         }
     }
 }
+
 impl ops::SubAssign for Color32 {
     fn sub_assign(&mut self, rhs: Color32) {
         *self = Color32 {
@@ -139,6 +147,7 @@ impl ops::SubAssign for Color32 {
         }
     }
 }
+
 impl ops::MulAssign for Color32 {
     fn mul_assign(&mut self, rhs: Color32) {
         *self = Color32 {
@@ -149,6 +158,7 @@ impl ops::MulAssign for Color32 {
         }
     }
 }
+
 impl ops::DivAssign for Color32 {
     fn div_assign(&mut self, rhs: Color32) {
         *self = Color32 {
@@ -160,7 +170,7 @@ impl ops::DivAssign for Color32 {
     }
 }
 
-// Logical operator overloadings for type Color32
+// Logical operator overloading for type Color32
 impl PartialEq for Color32 {
     fn eq(&self, other: &Color32) -> bool {
         return self.r == other.r && self.g == other.g && self.b == other.b && self.a == other.a;
@@ -183,25 +193,20 @@ impl Color32 {
 
     // Convert color format from HEX to RGB
     pub fn from_hex(hex: &str) -> Self {
-        if hex.len() != 6 {
-            return Color32 {
+        return if hex.len() != 6 {
+            Color32 {
                 r: 0,
                 g: 0,
                 b: 0,
                 a: 255,
-            };
+            }
         } else {
             let r = u32::from_str_radix(&hex[0..2], 16).unwrap();
             let g = u32::from_str_radix(&hex[2..4], 16).unwrap();
             let b = u32::from_str_radix(&hex[4..6], 16).unwrap();
 
-            return Color32 {
-                r: r,
-                g: g,
-                b: b,
-                a: 255,
-            };
-        }
+            Color32 { r, g, b, a: 255 }
+        };
     }
 
     // Unit colors

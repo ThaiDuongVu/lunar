@@ -313,6 +313,11 @@ impl App {
         beep();
     }
 
+    /// Clear the entire screen
+    pub fn erase(&self) {
+        self.window.as_ref().unwrap().erase();
+    }
+
     /// Quit current App
     pub fn quit(&mut self) {
         self.do_quit = true;
@@ -353,6 +358,7 @@ impl App {
             if self.do_quit {
                 break;
             }
+
             // User-defined update
             update(&mut self);
 

@@ -1,6 +1,7 @@
+use crate::input::Input;
 use crate::types::vector2int::Vector2Int;
 use pancurses::{
-    beep, curs_set, endwin, flash, initscr, noecho, resize_term, set_title, start_color,
+    beep, curs_set, endwin, flash, initscr, noecho, resize_term, set_title, start_color, Window,
 };
 
 #[derive(Clone, Copy)]
@@ -27,7 +28,8 @@ pub struct App {
     title: String,
     cursor_mode: CursorMode,
     do_quit: bool,
-    window: Option<pancurses::Window>,
+    pub window: Option<Window>,
+    pub input: Input,
 
     background: u64,
 
@@ -52,6 +54,7 @@ impl App {
             cursor_mode: DEFAULT_CURSOR_MODE,
             do_quit: false,
             window: None,
+            input: Input::new(),
 
             background: DEFAULT_BACKGROUND,
 
@@ -290,13 +293,21 @@ impl App {
         self.update_borders_corners();
     }
 
+    /// Set all App borders AND corners
+    pub fn set_all_borders_corners(&mut self, border_corner_char: char) {
+        self.set_all_borders(border_corner_char);
+        self.set_all_corners(border_corner_char);
+    }
+
     /// Invert App's color for a split second
+    ///
     /// Warning: may cause seizure, please use with caution
     pub fn flash(&self) {
         flash();
     }
 
     /// Play native OS's beep sound
+    ///
     /// Warning: can be very annoying, please use with caution
     pub fn beep(&self) {
         beep();
@@ -315,43 +326,42 @@ impl App {
         R: FnMut(&mut App) -> () + 'static,
         E: FnMut(&mut App) -> () + 'static,
     {
+        // Initialize current window and set default values
         self.window = Some(initscr());
         self.window.as_ref().unwrap().keypad(true);
         self.window.as_ref().unwrap().nodelay(true);
         noecho();
         start_color();
 
-        curs_set(self.cursor_mode as i32); // Set default cursor mode
-        set_title(&self.title); // Set default window title
-        resize_term(self.height, self.width); // Set default window size
-        self.clear_background(); // Set default background
+        curs_set(self.cursor_mode as i32);
+        set_title(&self.title);
+        resize_term(self.height, self.width);
+        self.clear_background();
 
+        // User-defined initialization
         init(&mut self);
 
         loop {
             match self.window.as_ref().unwrap().getch() {
                 Some(pancurses::Input::Character(character)) => {
-                    if character == 'q' {
-                        self.quit();
-                    }
-                }
-                Some(pancurses::Input::KeyEnter) => {
-                    println!("interesting");
+                    self.input.current_key_down = Some(character)
                 }
                 Some(_input) => {}
-                None => (),
+                None => self.input.current_key_down = None,
             }
 
             if self.do_quit {
                 break;
             }
+            // User-defined update
             update(&mut self);
 
-            // Update renders
+            // Refresh screen and call user-defined render
             self.window.as_ref().unwrap().refresh();
             render(&mut self);
         }
 
+        // User-defined exit
         exit(&mut self);
         endwin();
     }

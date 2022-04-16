@@ -14,12 +14,15 @@ fn main() {
             x: WIDTH,
             y: HEIGHT,
         });
-        app.set_all_borders('*');
-        app.set_all_corners('*');
+        app.set_all_borders_corners('*');
     };
 
     // Update App
-    let update = move |_app: &mut App| {};
+    let update = move |app: &mut App| {
+        if app.input.is_key_down('q') {
+            app.quit();
+        }
+    };
 
     // Render objects
     let render = move |_app: &mut App| {};

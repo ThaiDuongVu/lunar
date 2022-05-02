@@ -14,7 +14,7 @@ fn main() {
             x: WIDTH,
             y: HEIGHT,
         });
-        app.set_all_borders_corners('#');
+        app.set_all_borders_corners('*');
     };
 
     // Update App

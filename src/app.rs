@@ -1,7 +1,9 @@
-use crate::input::Input;
+use crate::input::{Input};
+use crate::types::mouse_button::MouseButton;
 use crate::types::vector2int::Vector2Int;
 use pancurses::{
-    beep, curs_set, endwin, flash, initscr, noecho, resize_term, set_title, start_color, Window,
+    beep, curs_set, endwin, flash, getmouse, initscr, noecho, resize_term, set_title, start_color, mousemask,
+    Window, ALL_MOUSE_EVENTS, REPORT_MOUSE_POSITION
 };
 
 #[derive(Clone, Copy)]
@@ -335,6 +337,8 @@ impl App {
         self.window = Some(initscr());
         self.window.as_ref().unwrap().keypad(true);
         self.window.as_ref().unwrap().nodelay(true);
+        // Listen to all mouse events
+        mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, None);
         noecho();
         start_color();
 
@@ -348,11 +352,20 @@ impl App {
 
         loop {
             match self.window.as_ref().unwrap().getch() {
+                Some(pancurses::Input::KeyMouse) => {
+                    if let Ok(mouse_event) = getmouse() {
+                        self.input.is_mouse_down = Some(MouseButton::from(mouse_event.bstate));
+                        self.input.on_mouse_clicked = Some(MouseButton::from(mouse_event.bstate));
+                    };
+                }
                 Some(pancurses::Input::Character(character)) => {
-                    self.input.current_key_down = Some(character)
+                    self.input.is_key_down = Some(character);
                 }
                 Some(_input) => {}
-                None => self.input.current_key_down = None,
+                None => {
+                    self.input.is_key_down = None;
+                    self.input.on_mouse_clicked = None;
+                }
             }
 
             if self.do_quit {

@@ -77,7 +77,7 @@ impl App {
     }
 
     /// Get App console window width
-    pub fn width(&self) -> i32 {
+    pub fn get_width(&self) -> i32 {
         return self.width;
     }
 
@@ -88,7 +88,7 @@ impl App {
     }
 
     /// Get App console height
-    pub fn height(&self) -> i32 {
+    pub fn get_height(&self) -> i32 {
         return self.height;
     }
 
@@ -100,7 +100,7 @@ impl App {
     }
 
     /// Return current App's console window size as a Vector2Int
-    pub fn size(&self) -> Vector2Int {
+    pub fn get_size(&self) -> Vector2Int {
         return Vector2Int {
             x: self.width,
             y: self.height,
@@ -113,18 +113,18 @@ impl App {
     }
 
     /// Get App console window title
-    pub fn title(&self) -> &str {
+    pub fn get_title(&self) -> &str {
         return &self.title;
     }
 
     /// Set current App's cursor display mode
-    pub fn set_cursor(&mut self, mode: CursorMode) {
+    pub fn set_cursor_mode(&mut self, mode: CursorMode) {
         self.cursor_mode = mode;
         curs_set(self.cursor_mode as i32);
     }
 
     /// Get current App's cursor display mode
-    pub fn cursor_mode(&self) -> CursorMode {
+    pub fn get_cursor_mode(&self) -> CursorMode {
         return self.cursor_mode;
     }
 

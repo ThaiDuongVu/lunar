@@ -5,6 +5,9 @@ pub struct Input {
     pub is_key_down: Option<char>,
     pub is_mouse_down: Option<MouseButton>,
     pub on_mouse_clicked: Option<MouseButton>,
+    pub on_mouse_release: Option<MouseButton>,
+    pub on_mouse_double_clicked: Option<MouseButton>,
+    pub on_mouse_triple_clicked: Option<MouseButton>,
 }
 
 impl Input {
@@ -14,15 +17,18 @@ impl Input {
             is_key_down: None,
             is_mouse_down: None,
             on_mouse_clicked: None,
+            on_mouse_release: None,
+            on_mouse_double_clicked: None,
+            on_mouse_triple_clicked: None,
         };
     }
 
-    pub fn is_key_down(&self, key: char) -> bool {
+    pub fn is_character_down(&self, key: char) -> bool {
         return self.is_key_down != None && self.is_key_down.as_ref().unwrap() == &key;
     }
 
-    pub fn is_key_up(&self, key: char) -> bool {
-        return !self.is_key_down(key);
+    pub fn is_character_up(&self, key: char) -> bool {
+        return !self.is_character_down(key);
     }
 
     pub fn is_mouse_down(&self, mouse_button: MouseButton) -> bool {

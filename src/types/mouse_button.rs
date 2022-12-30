@@ -1,6 +1,6 @@
 use pancurses;
 
-#[derive(PartialEq, PartialOrd)]
+#[derive(PartialEq)]
 pub enum MouseButton {
     Left,
     Right,
@@ -13,10 +13,22 @@ impl From<u32> for MouseButton {
         match origin {
             pancurses::BUTTON1_PRESSED => return MouseButton::Left,
             pancurses::BUTTON1_CLICKED => return MouseButton::Left,
+            pancurses::BUTTON1_RELEASED => return MouseButton::Left,
+            pancurses::BUTTON1_DOUBLE_CLICKED => return MouseButton::Left,
+            pancurses::BUTTON1_TRIPLE_CLICKED => return MouseButton::Left,
+
             pancurses::BUTTON2_PRESSED => return MouseButton::Middle,
             pancurses::BUTTON2_CLICKED => return MouseButton::Middle,
+            pancurses::BUTTON2_RELEASED => return MouseButton::Middle,
+            pancurses::BUTTON2_DOUBLE_CLICKED => return MouseButton::Middle,
+            pancurses::BUTTON2_TRIPLE_CLICKED => return MouseButton::Middle,
+
             pancurses::BUTTON3_PRESSED => return MouseButton::Right,
             pancurses::BUTTON3_CLICKED => return MouseButton::Right,
+            pancurses::BUTTON3_RELEASED => return MouseButton::Right,
+            pancurses::BUTTON3_DOUBLE_CLICKED => return MouseButton::Right,
+            pancurses::BUTTON3_TRIPLE_CLICKED => return MouseButton::Right,
+
             _ => return MouseButton::None,
         };
     }

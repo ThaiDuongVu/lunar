@@ -15,7 +15,7 @@ fn main() {
         if app.input.on_mouse_clicked(MouseButton::Left) {
             println!("left mouse down");
         }
-        if app.input.is_key_down('q') {
+        if app.input.is_character_down('q') {
             app.quit();
         }
     };

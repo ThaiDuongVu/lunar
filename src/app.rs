@@ -1,9 +1,9 @@
-use crate::input::{Input};
+use crate::input::Input;
 use crate::types::mouse_button::MouseButton;
 use crate::types::vector2int::Vector2Int;
 use pancurses::{
-    beep, curs_set, endwin, flash, getmouse, initscr, noecho, resize_term, set_title, start_color, mousemask,
-    Window, ALL_MOUSE_EVENTS, REPORT_MOUSE_POSITION
+    beep, curs_set, endwin, flash, getmouse, initscr, mousemask, noecho, resize_term, set_title,
+    start_color, Window, ALL_MOUSE_EVENTS, REPORT_MOUSE_POSITION,
 };
 
 #[derive(Clone, Copy)]

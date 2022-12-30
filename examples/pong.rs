@@ -19,7 +19,7 @@ fn main() {
 
     // Update App
     let update = move |app: &mut App| {
-        if app.input.is_key_down('q') {
+        if app.input.is_character_down('q') {
             app.quit();
         }
     };

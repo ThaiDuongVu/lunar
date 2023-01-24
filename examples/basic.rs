@@ -1,5 +1,4 @@
 use lunar::app::App;
-use lunar::types::mouse_button::MouseButton;
 
 fn main() {
     // Create a lunar app
@@ -12,9 +11,6 @@ fn main() {
 
     // Update App
     let update = move |app: &mut App| {
-        if app.input.on_mouse_clicked(MouseButton::Left) {
-            println!("left mouse down");
-        }
         if app.input.is_character_down('q') {
             app.quit();
         }

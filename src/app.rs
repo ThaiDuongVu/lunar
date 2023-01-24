@@ -1,5 +1,4 @@
 use crate::input::Input;
-use crate::types::mouse_button::MouseButton;
 use crate::types::vector2int::Vector2Int;
 use pancurses::{
     beep, curs_set, endwin, flash, getmouse, initscr, mousemask, noecho, resize_term, set_title,
@@ -354,17 +353,15 @@ impl App {
             match self.window.as_ref().unwrap().getch() {
                 Some(pancurses::Input::KeyMouse) => {
                     if let Ok(mouse_event) = getmouse() {
-                        self.input.is_mouse_down = Some(MouseButton::from(mouse_event.bstate));
-                        self.input.on_mouse_clicked = Some(MouseButton::from(mouse_event.bstate));
-                    };
+                        println!("{}", mouse_event.bstate);
+                    }
                 }
                 Some(pancurses::Input::Character(character)) => {
-                    self.input.is_key_down = Some(character);
+                    self.input.character_down = Some(character);
                 }
                 Some(_input) => {}
                 None => {
-                    self.input.is_key_down = None;
-                    self.input.on_mouse_clicked = None;
+                    self.input.character_down = None;
                 }
             }
 
@@ -375,9 +372,9 @@ impl App {
             // User-defined update
             update(&mut self);
 
-            // Refresh screen and call user-defined render
-            self.window.as_ref().unwrap().refresh();
+            // User-defined render
             render(&mut self);
+            self.window.as_ref().unwrap().refresh();
         }
 
         // User-defined exit

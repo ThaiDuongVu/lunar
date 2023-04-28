@@ -309,7 +309,7 @@ impl App {
 
     /// Play native OS's beep sound
     ///
-    /// Warning: can be very annoying, please use with caution
+    /// Warning: can cause annoyance, please use with caution
     pub fn beep(&self) {
         beep();
     }
@@ -353,7 +353,7 @@ impl App {
             match self.window.as_ref().unwrap().getch() {
                 Some(pancurses::Input::KeyMouse) => {
                     if let Ok(mouse_event) = getmouse() {
-                        println!("{}", mouse_event.bstate);
+                        // TODO: Use mouse_event.bstate to handle mouse input
                     }
                 }
                 Some(pancurses::Input::Character(character)) => {

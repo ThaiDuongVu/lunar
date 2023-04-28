@@ -1,5 +1,3 @@
-use crate::types::mouse_button::MouseButton;
-
 /// Input manager object
 pub struct Input {
     pub character_down: Option<char>,
@@ -17,7 +15,7 @@ impl Input {
         return self.character_down != None && self.character_down.as_ref().unwrap() == &character;
     }
 
-    pub fn is_character_up(&self, key: char) -> bool {
-        return !self.is_character_down(key);
+    pub fn is_character_up(&self, character: char) -> bool {
+        return !self.is_character_down(character);
     }
 }

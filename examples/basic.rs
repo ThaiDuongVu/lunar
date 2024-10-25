@@ -1,4 +1,4 @@
-use lunar::app::App;
+use lunar::{app::App, input::SpecialKey};
 
 fn main() {
     // Create a lunar app
@@ -12,13 +12,17 @@ fn main() {
 
     // Update App
     let update = |app: &mut App| {
-        let key = app.input.key_down;
-
-        if key == 'q' {
+        let char_key = app.input.char_key_down;
+        if char_key == 'q' {
             app.quit();
-        } else if key != ' ' {
-            app.set_all_borders(key);
-            app.set_all_corners(key);
+        } else if char_key != ' ' {
+            app.set_all_borders(char_key);
+            app.set_all_corners(char_key);
+        }
+
+        let special_key = app.input.special_key_down;
+        if special_key == SpecialKey::Up {
+            println!("up!");
         }
     };
 

@@ -1,4 +1,3 @@
-use crate::input::Input;
 use crate::types::vector2int::Vector2Int;
 use pancurses::{
     beep, curs_set, endwin, flash, getmouse, initscr, mousemask, noecho, resize_term, set_title,
@@ -19,20 +18,16 @@ const DEFAULT_HEIGHT: i32 = 30;
 const DEFAULT_TITLE: &str = "lunar App";
 const DEFAULT_CURSOR_MODE: CursorMode = CursorMode::Hidden;
 const DEFAULT_BACKGROUND: u64 = 0;
-const DEFAULT_BORDER: u64 = 128;
-const DEFAULT_CORNER: u64 = 128;
+const DEFAULT_BORDER: u64 = 0;
+const DEFAULT_CORNER: u64 = 0;
 
-/// Main game App, everything is wrapped in here
+/// Main program App, everything is wrapped in here
 pub struct App {
     width: i32,
     height: i32,
     title: String,
-    cursor_mode: CursorMode,
-    do_quit: bool,
-    pub window: Option<Window>,
-    pub input: Input,
-
     background: u64,
+    cursor_mode: CursorMode,
 
     border_left: u64,
     border_right: u64,
@@ -43,6 +38,9 @@ pub struct App {
     corner_top_right: u64,
     corner_bottom_left: u64,
     corner_bottom_right: u64,
+
+    do_quit: bool,
+    pub window: Option<Window>,
 }
 
 impl App {
@@ -52,12 +50,8 @@ impl App {
             width: DEFAULT_WIDTH,
             height: DEFAULT_HEIGHT,
             title: String::from(DEFAULT_TITLE),
-            cursor_mode: DEFAULT_CURSOR_MODE,
-            do_quit: false,
-            window: None,
-            input: Input::new(),
-
             background: DEFAULT_BACKGROUND,
+            cursor_mode: DEFAULT_CURSOR_MODE,
 
             border_left: DEFAULT_BORDER,
             border_right: DEFAULT_BORDER,
@@ -68,6 +62,9 @@ impl App {
             corner_top_right: DEFAULT_CORNER,
             corner_bottom_left: DEFAULT_CORNER,
             corner_bottom_right: DEFAULT_CORNER,
+
+            do_quit: false,
+            window: None,
         };
     }
 
@@ -148,6 +145,7 @@ impl App {
         return self.background as u8 as char;
     }
 
+    //region
     /// Update all App's borders and corners based on current border values
     fn update_borders_corners(&mut self) {
         self.window.as_ref().unwrap().border(
@@ -293,12 +291,7 @@ impl App {
         self.corner_bottom_right = DEFAULT_CORNER;
         self.update_borders_corners();
     }
-
-    /// Set all App borders AND corners
-    pub fn set_all_borders_corners(&mut self, border_corner_char: char) {
-        self.set_all_borders(border_corner_char);
-        self.set_all_corners(border_corner_char);
-    }
+    //endregion
 
     /// Invert App's color for a split second
     ///
@@ -309,7 +302,7 @@ impl App {
 
     /// Play native OS's beep sound
     ///
-    /// Warning: can cause annoyance, please use with caution
+    /// Warning: can be annoying, please use with caution
     pub fn beep(&self) {
         beep();
     }
@@ -327,10 +320,10 @@ impl App {
     /// Run current App
     pub fn run<I, U, R, E>(mut self, mut init: I, mut update: U, mut render: R, mut exit: E)
     where
-        I: FnMut(&mut App) -> () + 'static,
-        U: FnMut(&mut App) -> () + 'static,
-        R: FnMut(&mut App) -> () + 'static,
-        E: FnMut(&mut App) -> () + 'static,
+        I: FnMut(&mut App) -> (),
+        U: FnMut(&mut App) -> (),
+        R: FnMut(&mut App) -> (),
+        E: FnMut(&mut App) -> (),
     {
         // Initialize current window and set default values
         self.window = Some(initscr());
@@ -341,10 +334,19 @@ impl App {
         noecho();
         start_color();
 
-        curs_set(self.cursor_mode as i32);
-        set_title(&self.title);
-        resize_term(self.height, self.width);
+        // Set cursor mode
+        self.set_cursor_mode(DEFAULT_CURSOR_MODE);
+        // Set title
+        self.set_title(DEFAULT_TITLE.to_string());
+        // Set terminal size
+        self.set_size(Vector2Int {
+            x: DEFAULT_WIDTH,
+            y: DEFAULT_HEIGHT,
+        });
+        // Set background & borders corners
         self.clear_background();
+        self.clear_all_borders();
+        self.clear_all_corners();
 
         // User-defined initialization
         init(&mut self);
@@ -352,21 +354,20 @@ impl App {
         loop {
             match self.window.as_ref().unwrap().getch() {
                 Some(pancurses::Input::KeyMouse) => {
-                    if let Ok(mouse_event) = getmouse() {
+                    if let Ok(_mouse_event) = getmouse() {
                         // TODO: Use mouse_event.bstate to handle mouse input
                     }
                 }
                 Some(pancurses::Input::Character(character)) => {
-                    self.input.character_down = Some(character);
+                    // TODO: Handle keyboard input down
+                    if character == 'q' {
+                        self.quit();
+                    }
                 }
                 Some(_input) => {}
                 None => {
-                    self.input.character_down = None;
+                    // TODO: Handle keyboard input up
                 }
-            }
-
-            if self.do_quit {
-                break;
             }
 
             // User-defined update
@@ -375,6 +376,10 @@ impl App {
             // User-defined render
             render(&mut self);
             self.window.as_ref().unwrap().refresh();
+
+            if self.do_quit {
+                break;
+            }
         }
 
         // User-defined exit

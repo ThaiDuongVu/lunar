@@ -3,7 +3,7 @@
 pub struct GameObject {}
 
 impl GameObject {
-    /// Default constructor to initialize Game Object
+    /// Default constructor
     pub fn new() -> Self {
         return Self {};
     }

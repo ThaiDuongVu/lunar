@@ -1,6 +1,6 @@
-use crate::types::vector2int::Vector2Int;
+use crate::{input::Input, types::vector2int::Vector2Int};
 use pancurses::{
-    beep, curs_set, endwin, flash, getmouse, initscr, mousemask, noecho, resize_term, set_title,
+    beep, curs_set, endwin, flash, initscr, mousemask, noecho, resize_term, set_title,
     start_color, Window, ALL_MOUSE_EVENTS, REPORT_MOUSE_POSITION,
 };
 
@@ -23,24 +23,28 @@ const DEFAULT_CORNER: u64 = 0;
 
 /// Main program App, everything is wrapped in here
 pub struct App {
+    // Window properties
     width: i32,
     height: i32,
     title: String,
     background: u64,
     cursor_mode: CursorMode,
 
+    // Borders
     border_left: u64,
     border_right: u64,
     border_top: u64,
     border_bottom: u64,
 
+    // Corners
     corner_top_left: u64,
     corner_top_right: u64,
     corner_bottom_left: u64,
     corner_bottom_right: u64,
 
     do_quit: bool,
-    pub window: Option<Window>,
+    pub window: Window,
+    pub input: Input,
 }
 
 impl App {
@@ -64,7 +68,8 @@ impl App {
             corner_bottom_right: DEFAULT_CORNER,
 
             do_quit: false,
-            window: None,
+            window: initscr(),
+            input: Input::new(),
         };
     }
 
@@ -129,15 +134,15 @@ impl App {
     /// Set current App's background character
     pub fn set_background(&mut self, background_char: char) {
         self.background = background_char as u64;
-        self.window.as_ref().unwrap().bkgdset(self.background);
-        self.window.as_ref().unwrap().clear();
+        self.window.bkgdset(self.background);
+        self.window.clear();
     }
 
     /// Set current App's background to empty
     pub fn clear_background(&mut self) {
         self.background = DEFAULT_BACKGROUND;
-        self.window.as_ref().unwrap().bkgdset(self.background);
-        self.window.as_ref().unwrap().clear();
+        self.window.bkgdset(self.background);
+        self.window.clear();
     }
 
     /// Get current App's background character if there is a background set
@@ -148,7 +153,7 @@ impl App {
     //region
     /// Update all App's borders and corners based on current border values
     fn update_borders_corners(&mut self) {
-        self.window.as_ref().unwrap().border(
+        self.window.border(
             self.border_left,
             self.border_right,
             self.border_top,
@@ -309,7 +314,7 @@ impl App {
 
     /// Clear the entire screen
     pub fn erase(&self) {
-        self.window.as_ref().unwrap().erase();
+        self.window.erase();
     }
 
     /// Quit current App
@@ -326,9 +331,9 @@ impl App {
         E: FnMut(&mut App) -> (),
     {
         // Initialize current window and set default values
-        self.window = Some(initscr());
-        self.window.as_ref().unwrap().keypad(true);
-        self.window.as_ref().unwrap().nodelay(true);
+        // self.window = Some(initscr());
+        self.window.keypad(true);
+        self.window.nodelay(true);
         // Listen to all mouse events
         mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, None);
         noecho();
@@ -352,30 +357,15 @@ impl App {
         init(&mut self);
 
         loop {
-            match self.window.as_ref().unwrap().getch() {
-                Some(pancurses::Input::KeyMouse) => {
-                    if let Ok(_mouse_event) = getmouse() {
-                        // TODO: Use mouse_event.bstate to handle mouse input
-                    }
-                }
-                Some(pancurses::Input::Character(character)) => {
-                    // TODO: Handle keyboard input down
-                    if character == 'q' {
-                        self.quit();
-                    }
-                }
-                Some(_input) => {}
-                None => {
-                    // TODO: Handle keyboard input up
-                }
-            }
+            // Query for input from App
+            self.input.query(self.window.getch());
 
             // User-defined update
             update(&mut self);
 
             // User-defined render
             render(&mut self);
-            self.window.as_ref().unwrap().refresh();
+            self.window.refresh();
 
             if self.do_quit {
                 break;

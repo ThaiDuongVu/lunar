@@ -11,7 +11,16 @@ fn main() {
     };
 
     // Update App
-    let update = |_app: &mut App| {};
+    let update = |app: &mut App| {
+        let key = app.input.key_down;
+
+        if key == 'q' {
+            app.quit();
+        } else if key != ' ' {
+            app.set_all_borders(key);
+            app.set_all_corners(key);
+        }
+    };
 
     // Render objects
     let render = |_app: &mut App| {};

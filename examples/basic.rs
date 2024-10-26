@@ -1,4 +1,7 @@
-use lunar::{app::App, input::{MouseEvent, SpecialKey}};
+use lunar::{
+    app::App,
+    input::{MouseEvent, SpecialKey},
+};
 
 fn main() {
     // Create a lunar app
@@ -20,7 +23,7 @@ fn main() {
             app.set_all_corners(char_key);
         }
 
-        let special_key = app.input.get_special_key_dowb();
+        let special_key = app.input.get_special_key_down();
         if special_key == SpecialKey::Up {
             println!("up!");
         }

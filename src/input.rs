@@ -10,6 +10,13 @@ pub enum SpecialKey {
 }
 
 #[derive(PartialEq, Clone, Copy)]
+pub enum MouseButton {
+    Left,
+    Middle,
+    Right,
+}
+
+#[derive(PartialEq, Clone, Copy)]
 pub enum MouseEvent {
     None = 0,
     LeftMouseUp = 1,
@@ -95,31 +102,56 @@ impl Input {
         }
     }
 
+    /// Get current character key down
     pub fn get_char_key_down(&self) -> char {
         return self.char_key_down;
     }
 
-    pub fn get_special_key_dowb(&self) -> SpecialKey {
+    /// Get current special key down
+    pub fn get_special_key_down(&self) -> SpecialKey {
         return self.special_key_down;
     }
 
-    pub fn get_mouse_event(&self) -> MouseEvent {
-        return self.mouse_event;
-    }
-
+    /// Check if a character key is down
     pub fn is_char_key_down(&self, key: char) -> bool {
         return key == self.char_key_down;
     }
 
+    /// Check if a character is not down
     pub fn is_char_key_up(&self, key: char) -> bool {
         return key != self.char_key_down;
     }
 
+    /// Check if a special key is down
     pub fn is_special_key_down(&self, key: SpecialKey) -> bool {
         return key == self.special_key_down;
     }
 
+    /// Check if a special key is not down
     pub fn is_special_key_up(&self, key: SpecialKey) -> bool {
         return key != self.special_key_down;
+    }
+
+    /// Get current mouse event
+    pub fn get_mouse_event(&self) -> MouseEvent {
+        return self.mouse_event;
+    }
+
+    /// Check if a mouse button is down
+    pub fn is_mouse_down(&self, mouse_button: MouseButton) -> bool {
+        match mouse_button {
+            MouseButton::Left => self.mouse_event == MouseEvent::LeftMouseDown,
+            MouseButton::Middle => self.mouse_event == MouseEvent::MiddleMouseDown,
+            MouseButton::Right => self.mouse_event == MouseEvent::RightMouseDown,
+        }
+    }
+
+    /// Check if a mouse button is not down
+    pub fn is_mouse_up(&self, mouse_button: MouseButton) -> bool {
+        match mouse_button {
+            MouseButton::Left => self.mouse_event == MouseEvent::LeftMouseUp,
+            MouseButton::Middle => self.mouse_event == MouseEvent::MiddleMouseUp,
+            MouseButton::Right => self.mouse_event == MouseEvent::RightMouseUp,
+        }
     }
 }

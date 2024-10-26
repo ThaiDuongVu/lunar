@@ -7,4 +7,9 @@ impl GameObject {
     pub fn new() -> Self {
         return Self {};
     }
+
+    /// Render object on window
+    pub fn render() {
+
+    }
 }

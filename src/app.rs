@@ -150,7 +150,7 @@ impl App {
         return self.background as u8 as char;
     }
 
-    //region
+    //#region
     /// Update all App's borders and corners based on current border values
     fn update_borders_corners(&mut self) {
         self.window.border(
@@ -296,7 +296,7 @@ impl App {
         self.corner_bottom_right = DEFAULT_CORNER;
         self.update_borders_corners();
     }
-    //endregion
+    //#endregion
 
     /// Invert App's color for a split second
     ///
@@ -331,7 +331,6 @@ impl App {
         E: FnMut(&mut App) -> (),
     {
         // Initialize current window and set default values
-        // self.window = Some(initscr());
         self.window.keypad(true);
         self.window.nodelay(true);
         // Listen to all mouse events
@@ -348,7 +347,7 @@ impl App {
             x: DEFAULT_WIDTH,
             y: DEFAULT_HEIGHT,
         });
-        // Set background & borders corners
+        // Set background, borders & corners
         self.clear_background();
         self.clear_all_borders();
         self.clear_all_corners();
@@ -363,7 +362,7 @@ impl App {
             // User-defined update
             update(&mut self);
 
-            // User-defined render
+            // User-defined render then refresh the screen
             render(&mut self);
             self.window.refresh();
 

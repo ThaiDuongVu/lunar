@@ -46,6 +46,11 @@ impl GameObject {
         return *self;
     }
 
+    /// Get object position
+    pub fn get_position(&self) -> Vector2Int {
+        return self.position;
+    }
+
     /// Move object to a new position
     pub fn move_to(&mut self, new_position: Vector2Int) -> GameObject {
         if self.is_static {

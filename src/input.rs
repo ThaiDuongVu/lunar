@@ -107,11 +107,6 @@ impl Input {
         return self.char_key_down;
     }
 
-    /// Get current special key down
-    pub fn get_special_key_down(&self) -> SpecialKey {
-        return self.special_key_down;
-    }
-
     /// Check if a character key is down
     pub fn is_char_key_down(&self, key: char) -> bool {
         return key == self.char_key_down;
@@ -120,6 +115,11 @@ impl Input {
     /// Check if a character is not down
     pub fn is_char_key_up(&self, key: char) -> bool {
         return key != self.char_key_down;
+    }
+
+    /// Get current special key down
+    pub fn get_special_key_down(&self) -> SpecialKey {
+        return self.special_key_down;
     }
 
     /// Check if a special key is down

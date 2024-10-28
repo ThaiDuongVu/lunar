@@ -1,7 +1,9 @@
+use std::{thread::sleep, time::Duration};
+
 use crate::{input::Input, types::vector2int::Vector2Int};
 use pancurses::{
-    beep, curs_set, endwin, flash, initscr, mousemask, noecho, resize_term, set_title,
-    start_color, Window, ALL_MOUSE_EVENTS, REPORT_MOUSE_POSITION,
+    beep, curs_set, endwin, flash, initscr, mousemask, noecho, resize_term, set_title, start_color,
+    Window, ALL_MOUSE_EVENTS, REPORT_MOUSE_POSITION,
 };
 
 #[derive(Clone, Copy)]
@@ -313,8 +315,8 @@ impl App {
     }
 
     /// Clear the entire screen
-    pub fn erase(&self) {
-        self.window.erase();
+    pub fn clear(&self) {
+        self.window.clear();
     }
 
     /// Quit current App
@@ -363,12 +365,17 @@ impl App {
             update(&mut self);
 
             // User-defined render then refresh the screen
+            // self.window.refresh();
+            self.window.clear();
+            self.update_borders_corners();
             render(&mut self);
-            self.window.refresh();
 
             if self.do_quit {
                 break;
             }
+            
+            // TODO: Handle frame rate
+            sleep(Duration::from_secs_f32(0.01667));
         }
 
         // User-defined exit

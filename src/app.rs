@@ -15,13 +15,14 @@ pub enum CursorMode {
 }
 
 // Default values for window initialization
-const DEFAULT_WIDTH: i32 = 100;
-const DEFAULT_HEIGHT: i32 = 30;
-const DEFAULT_TITLE: &str = "lunar App";
-const DEFAULT_CURSOR_MODE: CursorMode = CursorMode::Hidden;
-const DEFAULT_BACKGROUND: u64 = 0;
-const DEFAULT_BORDER: u64 = 0;
-const DEFAULT_CORNER: u64 = 0;
+pub const DEFAULT_WIDTH: i32 = 100;
+pub const DEFAULT_HEIGHT: i32 = 30;
+pub const DEFAULT_TITLE: &str = "lunar App";
+pub const DEFAULT_CURSOR_MODE: CursorMode = CursorMode::Hidden;
+pub const DEFAULT_BACKGROUND: u64 = 0;
+pub const DEFAULT_BORDER: u64 = 0;
+pub const DEFAULT_CORNER: u64 = 0;
+pub const DEFAULT_FRAMERATE: u32 = 60;
 
 /// Main program App, everything is wrapped in here
 pub struct App {
@@ -31,6 +32,7 @@ pub struct App {
     title: String,
     background: u64,
     cursor_mode: CursorMode,
+    frame_time: f32,
 
     // Borders
     border_left: u64,
@@ -58,6 +60,7 @@ impl App {
             title: String::from(DEFAULT_TITLE),
             background: DEFAULT_BACKGROUND,
             cursor_mode: DEFAULT_CURSOR_MODE,
+            frame_time: 1 as f32 / DEFAULT_FRAMERATE as f32,
 
             border_left: DEFAULT_BORDER,
             border_right: DEFAULT_BORDER,
@@ -74,6 +77,28 @@ impl App {
             input: Input::new(),
         };
     }
+
+    //#region Constant getters
+    pub fn get_default_width() -> i32 {
+        return DEFAULT_WIDTH;
+    }
+
+    pub fn get_default_height() -> i32 {
+        return DEFAULT_HEIGHT;
+    }
+
+    pub fn get_default_title() -> String {
+        return DEFAULT_TITLE.to_owned();
+    }
+
+    pub fn get_default_cursor_mode() -> CursorMode {
+        return DEFAULT_CURSOR_MODE;
+    }
+
+    pub fn get_default_framerate() -> u32 {
+        return DEFAULT_FRAMERATE;
+    }
+    //#endregion
 
     /// Set App console window width
     pub fn set_width(&mut self, width: i32) {
@@ -300,6 +325,11 @@ impl App {
     }
     //#endregion
 
+    /// Set App's framerate
+    pub fn set_framerate(&mut self, framerate: u32) {
+        self.frame_time = 1 as f32 / framerate as f32;
+    }
+
     /// Invert App's color for a split second
     ///
     /// Warning: may cause seizure, please use with caution
@@ -373,9 +403,9 @@ impl App {
             if self.do_quit {
                 break;
             }
-            
-            // TODO: Handle frame rate
-            sleep(Duration::from_secs_f32(0.01667));
+
+            // Handle frame rate
+            sleep(Duration::from_secs_f32(self.frame_time));
         }
 
         // User-defined exit

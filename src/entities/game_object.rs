@@ -9,18 +9,18 @@ pub struct GameObject {
     is_static: bool,
 
     position: Vector2Int,
-    map: *const Array2<char>,
+    char_map: *const Array2<char>,
 }
 
 impl GameObject {
     /// Default constructor
-    pub fn new(map: *const Array2<char>) -> Self {
+    pub fn new(char_map: *const Array2<char>) -> Self {
         return Self {
             is_visible: true,
             is_static: false,
 
             position: Vector2Int::zero(),
-            map,
+            char_map,
         };
     }
 
@@ -69,7 +69,7 @@ impl GameObject {
         if !self.is_visible {
             return;
         }
-        let map = unsafe { self.map.as_ref().unwrap() };
+        let map = unsafe { self.char_map.as_ref().unwrap() };
         for y in 0..map.shape()[0] {
             for x in 0..map.shape()[1] {
                 app.window.mvaddch(

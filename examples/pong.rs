@@ -8,17 +8,54 @@ fn main() {
     // Create a lunar app
     let app = App::new();
 
-    let p1_map = array![['|'], ['|'], ['|'], ['|'], ['|'], ['|'],];
+    let divider_map = array![
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+        ['|'],
+    ];
+    let divider = Cell::new(GameObject::new(&divider_map));
+
+    let p1_map = array![['['], ['['], ['['], ['['], ['[']];
     let player1 = Cell::new(GameObject::new(&p1_map));
 
-    let p2_map = array![['|'], ['|'], ['|'], ['|'], ['|'], ['|'],];
+    let p2_map = array![[']'], [']'], [']'], [']'], [']']];
     let player2 = Cell::new(GameObject::new(&p2_map));
 
     // Initialize App
     let init = |app: &mut App| {
+        app.set_width(101);
+        app.set_height(29);
         app.set_title("Pong".to_string());
+
+        divider.set(divider.get().move_to(Vector2Int { x: 50, y: 0 }));
         player1.set(player1.get().move_to(Vector2Int { x: 3, y: 12 }));
-        player2.set(player1.get().move_to(Vector2Int { x: 96, y: 12 }));
+        player2.set(player2.get().move_to(Vector2Int { x: 97, y: 12 }));
     };
 
     // Update App
@@ -44,6 +81,7 @@ fn main() {
 
     // Render objects on App window
     let render = |app: &mut App| {
+        divider.get().render(app);
         player1.get().render(app);
         player2.get().render(app);
     };

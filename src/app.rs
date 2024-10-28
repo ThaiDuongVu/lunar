@@ -395,7 +395,6 @@ impl App {
             update(&mut self);
 
             // User-defined render then refresh the screen
-            // self.window.refresh();
             self.window.clear();
             self.update_borders_corners();
             render(&mut self);

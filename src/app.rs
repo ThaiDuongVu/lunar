@@ -2,8 +2,9 @@ use std::{thread::sleep, time::Duration};
 
 use crate::{input::Input, types::vector2int::Vector2Int};
 use pancurses::{
-    beep, curs_set, endwin, flash, initscr, mousemask, noecho, resize_term, set_title, start_color,
-    Window, ALL_MOUSE_EVENTS, REPORT_MOUSE_POSITION,
+    beep, curs_set, endwin, flash, has_colors, init_pair, initscr, mousemask, noecho, resize_term,
+    set_title, start_color, Window, ALL_MOUSE_EVENTS, COLOR_BLACK, COLOR_CYAN, COLOR_GREEN,
+    COLOR_MAGENTA, COLOR_PAIR, COLOR_RED, COLOR_WHITE, COLOR_YELLOW, REPORT_MOUSE_POSITION,
 };
 
 #[derive(Clone, Copy)]
@@ -14,12 +15,24 @@ pub enum CursorMode {
     Block = 2,
 }
 
+#[derive(Clone, Copy)]
+pub enum Color {
+    Black = COLOR_BLACK as isize,
+    Cyan = COLOR_CYAN as isize,
+    Green = COLOR_GREEN as isize,
+    Magenta = COLOR_MAGENTA as isize,
+    Red = COLOR_RED as isize,
+    White = COLOR_WHITE as isize,
+    Yellow = COLOR_YELLOW as isize,
+}
+
 // Default values for window initialization
 pub const DEFAULT_WIDTH: i32 = 100;
 pub const DEFAULT_HEIGHT: i32 = 30;
 pub const DEFAULT_TITLE: &str = "lunar App";
 pub const DEFAULT_CURSOR_MODE: CursorMode = CursorMode::Hidden;
 pub const DEFAULT_BACKGROUND: u64 = 0;
+pub const DEFAULT_BACKGROUND_COLOR: Color = Color::Black;
 pub const DEFAULT_BORDER: u64 = 0;
 pub const DEFAULT_CORNER: u64 = 0;
 pub const DEFAULT_FRAMERATE: u32 = 60;
@@ -31,6 +44,7 @@ pub struct App {
     height: i32,
     title: String,
     background: u64,
+    background_color: Color,
     cursor_mode: CursorMode,
     frame_time: f32,
 
@@ -59,6 +73,7 @@ impl App {
             height: DEFAULT_HEIGHT,
             title: String::from(DEFAULT_TITLE),
             background: DEFAULT_BACKGROUND,
+            background_color: DEFAULT_BACKGROUND_COLOR,
             cursor_mode: DEFAULT_CURSOR_MODE,
             frame_time: 1 as f32 / DEFAULT_FRAMERATE as f32,
 
@@ -159,7 +174,7 @@ impl App {
     }
 
     /// Set current App's background character
-    pub fn set_background(&mut self, background_char: char) {
+    pub fn set_background_char(&mut self, background_char: char) {
         self.background = background_char as u64;
         self.window.bkgdset(self.background);
         self.window.clear();
@@ -173,8 +188,20 @@ impl App {
     }
 
     /// Get current App's background character if there is a background set
-    pub fn get_background(&self) -> char {
+    pub fn get_background_char(&self) -> char {
         return self.background as u8 as char;
+    }
+
+    /// Set current App's background color
+    pub fn set_background_color(&mut self, background_color: Color) {
+        self.background_color = background_color;
+        init_pair(1, COLOR_WHITE, self.background_color as i16);
+        self.window.bkgd(COLOR_PAIR(1));
+    }
+
+    /// Get current App's background color
+    pub fn get_background_color(&self) -> Color {
+        return self.background_color;
     }
 
     //#region
@@ -365,10 +392,13 @@ impl App {
         // Initialize current window and set default values
         self.window.keypad(true);
         self.window.nodelay(true);
+
         // Listen to all mouse events
         mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, None);
         noecho();
-        start_color();
+        if has_colors() {
+            start_color();
+        }
 
         // Set cursor mode
         self.set_cursor_mode(DEFAULT_CURSOR_MODE);
@@ -383,6 +413,11 @@ impl App {
         self.clear_background();
         self.clear_all_borders();
         self.clear_all_corners();
+
+        // Set background color
+        init_pair(1, COLOR_WHITE, self.background_color as i16);
+        self.window.bkgd(COLOR_PAIR(1));
+        // self.window.attron(COLOR_PAIR(1));
 
         // User-defined initialization
         init(&mut self);

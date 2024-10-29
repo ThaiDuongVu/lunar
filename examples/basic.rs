@@ -37,7 +37,7 @@ fn main() {
     // Render objects
     let render = |_app: &mut App| {};
 
-    // Exit App
+    // On App exit
     let exit = |_app: &mut App| {};
 
     // Run App

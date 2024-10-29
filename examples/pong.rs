@@ -1,5 +1,8 @@
 use lunar::{
-    app::App, entities::game_object::GameObject, input::SpecialKey, types::vector2int::Vector2Int,
+    app::{App, Color},
+    entities::game_object::GameObject,
+    input::SpecialKey,
+    types::vector2int::Vector2Int,
 };
 use ndarray::array;
 use rand::Rng;
@@ -64,6 +67,7 @@ fn main() {
         app.set_width(101);
         app.set_height(29);
         app.set_title("Pong".to_string());
+        app.set_background_color(Color::Black);
 
         divider.set(divider.get().move_to(Vector2Int { x: 50, y: 0 }));
         player1.set(player1.get().move_to(Vector2Int { x: 3, y: 12 }));
@@ -128,7 +132,7 @@ fn main() {
         ball.get().render(app);
     };
 
-    // Exit App
+    // On App exit
     let exit = |_app: &mut App| {};
 
     // Run App

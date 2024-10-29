@@ -68,6 +68,7 @@ fn main() {
         app.set_height(29);
         app.set_title("Pong".to_string());
         app.set_background_color(Color::Black);
+        app.set_foreground_color(Color::Cyan);
 
         divider.set(divider.get().move_to(Vector2Int { x: 50, y: 0 }));
         player1.set(player1.get().move_to(Vector2Int { x: 3, y: 12 }));

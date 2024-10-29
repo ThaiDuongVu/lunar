@@ -33,6 +33,7 @@ pub const DEFAULT_TITLE: &str = "lunar App";
 pub const DEFAULT_CURSOR_MODE: CursorMode = CursorMode::Hidden;
 pub const DEFAULT_BACKGROUND: u64 = 0;
 pub const DEFAULT_BACKGROUND_COLOR: Color = Color::Black;
+pub const DEFAULT_FOREGROUND_COLOR: Color = Color::White;
 pub const DEFAULT_BORDER: u64 = 0;
 pub const DEFAULT_CORNER: u64 = 0;
 pub const DEFAULT_FRAMERATE: u32 = 60;
@@ -45,6 +46,7 @@ pub struct App {
     title: String,
     background: u64,
     background_color: Color,
+    foreground_color: Color,
     cursor_mode: CursorMode,
     frame_time: f32,
 
@@ -74,6 +76,7 @@ impl App {
             title: String::from(DEFAULT_TITLE),
             background: DEFAULT_BACKGROUND,
             background_color: DEFAULT_BACKGROUND_COLOR,
+            foreground_color: DEFAULT_FOREGROUND_COLOR,
             cursor_mode: DEFAULT_CURSOR_MODE,
             frame_time: 1 as f32 / DEFAULT_FRAMERATE as f32,
 
@@ -195,13 +198,33 @@ impl App {
     /// Set current App's background color
     pub fn set_background_color(&mut self, background_color: Color) {
         self.background_color = background_color;
-        init_pair(1, COLOR_WHITE, self.background_color as i16);
+        init_pair(
+            2,
+            self.foreground_color as i16,
+            self.background_color as i16,
+        );
         self.window.bkgd(COLOR_PAIR(1));
     }
 
     /// Get current App's background color
     pub fn get_background_color(&self) -> Color {
         return self.background_color;
+    }
+
+    /// Set current App's foreground color
+    pub fn set_foreground_color(&mut self, foreground_color: Color) {
+        self.foreground_color = foreground_color;
+        init_pair(
+            2,
+            self.foreground_color as i16,
+            self.background_color as i16,
+        );
+        self.window.attron(COLOR_PAIR(2));
+    }
+
+    /// Get current App's foreground color
+    pub fn get_foreground_color(&self) -> Color {
+        return self.foreground_color;
     }
 
     //#region
@@ -415,9 +438,8 @@ impl App {
         self.clear_all_corners();
 
         // Set background color
-        init_pair(1, COLOR_WHITE, self.background_color as i16);
-        self.window.bkgd(COLOR_PAIR(1));
-        // self.window.attron(COLOR_PAIR(1));
+        self.set_background_color(self.background_color);
+        self.set_foreground_color(self.foreground_color);
 
         // User-defined initialization
         init(&mut self);

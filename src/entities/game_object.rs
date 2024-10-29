@@ -74,6 +74,8 @@ impl GameObject {
         if !self.is_visible {
             return;
         }
+
+        // Render chars in char map
         let map = unsafe { self.char_map.as_ref().unwrap() };
         for y in 0..map.shape()[0] {
             for x in 0..map.shape()[1] {

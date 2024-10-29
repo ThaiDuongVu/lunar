@@ -1,6 +1,6 @@
 use lunar::{
     app::{App, Color},
-    entities::game_object::GameObject,
+    entities::char_object::CharObject,
     input::SpecialKey,
     types::vector2int::Vector2Int,
 };
@@ -46,13 +46,13 @@ fn main() {
         ['|'],
         ['|'],
     ];
-    let divider = Cell::new(GameObject::new(&divider_map));
+    let divider = Cell::new(CharObject::new(&divider_map));
 
     let p1_map = array![['['], ['['], ['['], ['['], ['[']];
-    let player1 = Cell::new(GameObject::new(&p1_map));
+    let player1 = Cell::new(CharObject::new(&p1_map));
 
     let p2_map = array![[']'], [']'], [']'], [']'], [']']];
-    let player2 = Cell::new(GameObject::new(&p2_map));
+    let player2 = Cell::new(CharObject::new(&p2_map));
 
     let mut rng = rand::thread_rng();
     let ball_direction = Cell::new(Vector2Int {
@@ -60,7 +60,7 @@ fn main() {
         y: rng.gen_range(-1..2),
     });
     let ball_map = array![['o']];
-    let ball = Cell::new(GameObject::new(&ball_map));
+    let ball = Cell::new(CharObject::new(&ball_map));
 
     // Initialize App
     let init = |app: &mut App| {

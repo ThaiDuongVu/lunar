@@ -1,11 +1,10 @@
+use super::game_object::GameObject;
 use crate::app::App;
 use crate::types::vector2int::Vector2Int;
 use ndarray::Array2;
 
-use super::game_object::GameObject;
-
 #[derive(Copy, Clone)]
-/// A character-based object
+/// A 2D character-based object
 pub struct CharObject {
     game_object: GameObject,
     is_visible: bool,
@@ -66,6 +65,18 @@ impl CharObject {
         return *self;
     }
 
+    /// Get char map width
+    pub fn get_width(&self) -> usize {
+        let map = unsafe { self.char_map.as_ref().unwrap() };
+        return map.shape()[1];
+    }
+
+    /// Get char map height
+    pub fn get_height(&self) -> usize {
+        let map = unsafe { self.char_map.as_ref().unwrap() };
+        return map.shape()[0];
+    }
+
     /// Render object on App window
     pub fn render(&self, app: &mut App) {
         if !self.is_visible {
@@ -74,8 +85,8 @@ impl CharObject {
 
         // Render chars in char map
         let map = unsafe { self.char_map.as_ref().unwrap() };
-        for y in 0..map.shape()[0] {
-            for x in 0..map.shape()[1] {
+        for y in 0..self.get_height() {
+            for x in 0..self.get_width() {
                 app.window.mvaddch(
                     self.get_position().y + y as i32,
                     self.get_position().x + x as i32,

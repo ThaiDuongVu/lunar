@@ -1,6 +1,6 @@
 use lunar::{
     app::{App, Color},
-    entities::char_object::CharObject,
+    entities::{char_object::CharObject, text_object::TextObject},
     input::SpecialKey,
     types::vector2int::Vector2Int,
 };
@@ -62,6 +62,11 @@ fn main() {
     let ball_map = array![['o']];
     let ball = Cell::new(CharObject::new(&ball_map));
 
+    let p1_score = String::from("1");
+    let player1_score_text = Cell::new(TextObject::new(&p1_score));
+    let p2_score = String::from("2");
+    let player2_score_text = Cell::new(TextObject::new(&p2_score));
+
     // Initialize App
     let init = |app: &mut App| {
         app.set_width(101);
@@ -74,6 +79,9 @@ fn main() {
         player1.set(player1.get().move_to(Vector2Int { x: 3, y: 12 }));
         player2.set(player2.get().move_to(Vector2Int { x: 97, y: 12 }));
         ball.set(ball.get().move_to(Vector2Int { x: 50, y: 14 }));
+
+        player1_score_text.set(player1_score_text.get().move_to(Vector2Int { x: 25, y: 1 }));
+        player2_score_text.set(player2_score_text.get().move_to(Vector2Int { x: 75, y: 1 }));
     };
 
     // Update App
@@ -131,6 +139,9 @@ fn main() {
         player1.get().render(app);
         player2.get().render(app);
         ball.get().render(app);
+
+        player1_score_text.get().render(app);
+        player2_score_text.get().render(app);
     };
 
     // On App exit
